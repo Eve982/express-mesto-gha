@@ -24,10 +24,10 @@ module.exports.createUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   const { _id } = req.body;
   User.findById({ _id })
-    .populate('card')
+    .orFail(new Error('NotFound'))
     .then((userData) => res.send({ userData }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err.name === 'CastError') {
         return res.status(400).send(errorMessage400);
       }
       return next(err);
@@ -37,6 +37,7 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { _id, name, about } = req.body;
   User.findByIdAndUpdate(_id, { name, about })
+    .orFail(new Error('NotFound'))
     .then((userData) => res.send({ userData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -49,6 +50,7 @@ module.exports.updateUser = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { _id, avatar } = req.body;
   User.findByIdAndUpdate(_id, { avatar })
+    .orFail(new Error('NotFound'))
     .then((avatarData) => res.send({ avatarData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
