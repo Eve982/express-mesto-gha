@@ -21,9 +21,8 @@ app.use((req, res, next) => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((err, req, res, next) => {
-  res.status(500).send('На сервере произошла ошибка.');
-  return next();
+app.use((req, res) => {
+  res.status(404).send({ message: 'Некорректный путь запроса' });
 });
 
 app.listen(PORT);

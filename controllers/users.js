@@ -40,7 +40,7 @@ module.exports.updateUser = (req, res) => {
     .orFail(new Error('NotFound'))
     .then((userData) => res.send(userData))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
@@ -54,7 +54,7 @@ module.exports.updateAvatar = (req, res) => {
     .orFail(new Error('NotFound'))
     .then((avatarData) => res.send(avatarData))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
