@@ -20,8 +20,7 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  const { _id } = req.body;
-  User.findById(_id)
+  User.findById(req.user._id)
     .orFail(new Error('NotFound'))
     .then((userData) => res.send(userData))
     .catch((err) => {
@@ -36,9 +35,9 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, name, about)
     .orFail(new Error('NotFound'))
-    .then((userData) => res.send({ userData }))
+    .then((userData) => res.send(userData))
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
@@ -51,9 +50,9 @@ module.exports.updateUser = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, avatar)
     .orFail(new Error('NotFound'))
-    .then((avatarData) => res.send({ avatarData }))
+    .then((avatarData) => res.send(avatarData))
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
