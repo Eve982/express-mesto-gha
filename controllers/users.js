@@ -1,8 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const User = require('../models/user');
 
-const { errorMessage400 } = require('../utils/utils');
-
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((usersData) => res.send(usersData))
@@ -15,7 +13,7 @@ module.exports.createUser = (req, res, next) => {
     .then((userData) => res.send({ userData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send(errorMessage400);
+        return res.status(404).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
       return next(err);
     });
@@ -27,8 +25,8 @@ module.exports.getUserById = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((userData) => res.send({ userData }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(400).send(errorMessage400);
+      if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return next(err);
     });
@@ -40,8 +38,10 @@ module.exports.updateUser = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((userData) => res.send({ userData }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send(errorMessage400);
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
+      } if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return next(err);
     });
@@ -53,8 +53,10 @@ module.exports.updateAvatar = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((avatarData) => res.send({ avatarData }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send(errorMessage400);
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
+      } if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return next(err);
     });

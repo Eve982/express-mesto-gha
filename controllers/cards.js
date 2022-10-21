@@ -1,8 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Card = require('../models/card');
 
-const { errorMessage400 } = require('../utils/utils');
-
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cardsData) => res.send(cardsData))
@@ -15,7 +13,7 @@ module.exports.createCard = (req, res, next) => {
     .then((cardsData) => res.send({ cardsData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send(errorMessage400);
+        return res.status(404).send({ message: 'Переданы некорректные данные при создании карточки.' });
       }
       return next(err);
     });
@@ -27,8 +25,8 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(400).send(errorMessage400);
+      if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return next(err);
     });
@@ -44,7 +42,9 @@ module.exports.setCardLike = (req, res, next) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send(errorMessage400);
+        return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+      } if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return next(err);
     });
@@ -60,7 +60,9 @@ module.exports.deleteCardLike = (req, res, next) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send(errorMessage400);
+        return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+      } if (err.name === 'NotFound') {
+        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return next(err);
     });
