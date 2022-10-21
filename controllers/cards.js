@@ -7,7 +7,7 @@ module.exports.getCards = (req, res) => {
     .catch(() => res.status(500).send('На сервере произошла ошибка.'));
 };
 
-module.exports.createCard = (req, res, next) => {
+module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((cardsData) => res.send({ cardsData }))
@@ -19,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
     .orFail(new Error('NotFound'))
@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
     });
 };
 
-module.exports.setCardLike = (req, res, next) => {
+module.exports.setCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -52,7 +52,7 @@ module.exports.setCardLike = (req, res, next) => {
     });
 };
 
-module.exports.deleteCardLike = (req, res, next) => {
+module.exports.deleteCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
