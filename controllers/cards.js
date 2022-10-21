@@ -29,7 +29,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при удалении карточки.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });
@@ -47,7 +47,7 @@ module.exports.setCardLike = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });
@@ -65,7 +65,7 @@ module.exports.deleteCardLike = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });

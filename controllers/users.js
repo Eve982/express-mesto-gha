@@ -28,7 +28,7 @@ module.exports.getUserById = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при поиске пользователя.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });
@@ -42,7 +42,7 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });
@@ -56,7 +56,7 @@ module.exports.updateAvatar = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-      } if (err.name === 'NotFound') {
+      } if (err.message === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка.' });
