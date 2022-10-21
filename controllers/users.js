@@ -3,8 +3,10 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((usersData) => res.send(usersData));
-  res.status(500).send({ message: 'На сервере произошла ошибка.' });
+    .then((usersData) => res.send(usersData))
+    .catch(() => {
+      res.status(500).send({ message: 'На сервере произошла ошибка.' });
+    });
 };
 
 module.exports.createUser = (req, res) => {
