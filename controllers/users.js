@@ -3,8 +3,8 @@ const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((usersData) => res.send(usersData))
-    .catch(() => res.status(500).send('На сервере произошла ошибка.'));
+    .then((usersData) => res.send(usersData));
+  res.status(500).send({ message: 'На сервере произошла ошибка.' });
 };
 
 module.exports.createUser = (req, res) => {
@@ -15,7 +15,7 @@ module.exports.createUser = (req, res) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
-      return res.status(500).send('На сервере произошла ошибка.');
+      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -29,13 +29,12 @@ module.exports.getUserById = (req, res) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return res.status(500).send('На сервере произошла ошибка.');
+      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
 module.exports.updateUser = (req, res) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, name, about)
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
     .orFail(new Error('NotFound'))
     .then((userData) => res.send(userData))
     .catch((err) => {
@@ -44,13 +43,12 @@ module.exports.updateUser = (req, res) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return res.status(500).send('На сервере произошла ошибка.');
+      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
 module.exports.updateAvatar = (req, res) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, avatar)
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
     .orFail(new Error('NotFound'))
     .then((avatarData) => res.send(avatarData))
     .catch((err) => {
@@ -59,6 +57,6 @@ module.exports.updateAvatar = (req, res) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return res.status(500).send('На сервере произошла ошибка.');
+      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
     });
 };
