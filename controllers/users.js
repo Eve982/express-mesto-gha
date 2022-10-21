@@ -22,7 +22,7 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .orFail(new Error('NotFound'))
     .then((userData) => res.send(userData))
     .catch((err) => {
