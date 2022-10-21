@@ -1,10 +1,10 @@
 const { default: mongoose } = require('mongoose');
 const Card = require('../models/card');
 
-module.exports.getCards = (req, res, next) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cardsData) => res.send(cardsData))
-    .catch((err) => next(err));
+    .catch(() => res.status(500).send('На сервере произошла ошибка.'));
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -15,7 +15,7 @@ module.exports.createCard = (req, res, next) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
@@ -30,7 +30,7 @@ module.exports.deleteCard = (req, res, next) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
@@ -48,7 +48,7 @@ module.exports.setCardLike = (req, res, next) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
@@ -66,6 +66,6 @@ module.exports.deleteCardLike = (req, res, next) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };

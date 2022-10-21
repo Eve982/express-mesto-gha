@@ -1,13 +1,13 @@
 const { default: mongoose } = require('mongoose');
 const User = require('../models/user');
 
-module.exports.getUsers = (req, res, next) => {
+module.exports.getUsers = (req, res) => {
   User.find({})
     .then((usersData) => res.send(usersData))
-    .catch((err) => next(err));
+    .catch(() => res.status(500).send('На сервере произошла ошибка.'));
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((userData) => res.send({ userData }))
@@ -15,26 +15,26 @@ module.exports.createUser = (req, res, next) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
-module.exports.getUserById = (req, res, next) => {
+module.exports.getUserById = (req, res) => {
   const { _id } = req.body;
   User.findById(_id)
     .orFail(new Error('NotFound'))
-    .then((userData) => res.send({ userData }))
+    .then((userData) => res.send(userData))
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при поиске пользователя.' });
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
-module.exports.updateUser = (req, res, next) => {
+module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about })
     .orFail(new Error('NotFound'))
@@ -45,11 +45,11 @@ module.exports.updateUser = (req, res, next) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
 
-module.exports.updateAvatar = (req, res, next) => {
+module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar })
     .orFail(new Error('NotFound'))
@@ -60,6 +60,6 @@ module.exports.updateAvatar = (req, res, next) => {
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return next(err);
+      return res.status(500).send('На сервере произошла ошибка.');
     });
 };
