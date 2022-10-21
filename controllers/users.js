@@ -13,7 +13,7 @@ module.exports.createUser = (req, res, next) => {
     .then((userData) => res.send({ userData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(404).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+        return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       }
       return next(err);
     });
@@ -25,7 +25,9 @@ module.exports.getUserById = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((userData) => res.send({ userData }))
     .catch((err) => {
-      if (err.name === 'NotFound') {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при поиске пользователя.' });
+      } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Пользователя с таким ID не существует.' });
       }
       return next(err);
