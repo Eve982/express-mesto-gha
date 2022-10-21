@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
     .orFail(new Error('NotFound'))
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные при удалении карточки.' });
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
@@ -45,7 +45,7 @@ module.exports.setCardLike = (req, res) => {
     .orFail(new Error('NotFound'))
     .then((cardData) => res.send(cardData))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
@@ -63,7 +63,7 @@ module.exports.deleteCardLike = (req, res) => {
     .orFail(new Error('NotFound'))
     .then((cardData) => res.send(cardData))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof mongoose.Error.CastError) {
         return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       } if (err.name === 'NotFound') {
         return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
