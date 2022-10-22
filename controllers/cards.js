@@ -25,12 +25,12 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
-    .orFail(new Error('NotFound'))
+    .orFail()
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при удалении карточки.' });
-      } if (err.message === 'NotFound') {
+      } if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
@@ -43,12 +43,12 @@ module.exports.setCardLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotFound'))
+    .orFail()
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка.' });
-      } if (err.message === 'NotFound') {
+      } if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
@@ -61,12 +61,12 @@ module.exports.deleteCardLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotFound'))
+    .orFail()
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для снятия лайка.' });
-      } if (err.message === 'NotFound') {
+      } if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
       return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });

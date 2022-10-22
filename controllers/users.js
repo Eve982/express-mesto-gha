@@ -24,7 +24,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(new Error())
+    .orFail()
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
@@ -32,13 +32,13 @@ module.exports.getUserById = (req, res) => {
       } if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND).send({ message: 'Пользователя с таким ID не существует.' });
       }
-      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.', err });
     });
 };
 
 module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
-    .orFail(new Error())
+    .orFail()
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -52,7 +52,7 @@ module.exports.updateUser = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
-    .orFail(new Error())
+    .orFail()
     .then((avatarData) => res.send(avatarData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
