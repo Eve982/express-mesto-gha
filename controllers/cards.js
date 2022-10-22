@@ -1,11 +1,12 @@
 const { default: mongoose } = require('mongoose');
 const Card = require('../models/card');
+const { CAST_ERROR, NOT_FOUND, SERVER_ERROR } = require('../utils/utils');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cardsData) => res.send(cardsData))
-    .catch(() => {
-      res.status(500).send({ message: 'На сервере произошла ошибка.' });
+    .catch((err) => {
+      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.', err });
     });
 };
 
@@ -15,9 +16,9 @@ module.exports.createCard = (req, res) => {
     .then((cardsData) => res.send({ cardsData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при создании карточки.', err });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -28,11 +29,11 @@ module.exports.deleteCard = (req, res) => {
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(400).send({ message: 'Переданы некорректные данные при удалении карточки.' });
+        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при удалении карточки.' });
       } if (err.message === 'NotFound') {
-        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
+        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -46,11 +47,11 @@ module.exports.setCardLike = (req, res) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       } if (err.message === 'NotFound') {
-        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
+        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };
 
@@ -64,10 +65,10 @@ module.exports.deleteCardLike = (req, res) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       } if (err.message === 'NotFound') {
-        return res.status(404).send({ message: 'Карточки с таким ID не существует.' });
+        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка.' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
     });
 };

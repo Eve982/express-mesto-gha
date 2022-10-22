@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const { NOT_FOUND } = require('./utils/utils');
 
 const app = express();
 
@@ -9,8 +9,7 @@ mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
     _id: '634d9ec31ec53a8b49096385',
@@ -22,7 +21,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use((req, res) => {
-  res.status(404).send({ message: 'Некорректный путь запроса' });
+  res.status(NOT_FOUND).send({ message: 'Некорректный путь запроса' });
 });
 
 app.listen(PORT);
