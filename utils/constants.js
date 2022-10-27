@@ -1,0 +1,9 @@
+const CREATED = 201;
+const BAD_REQUEST = 400;
+const UNAUTORIZED = 401;
+const NOT_FOUND = 404;
+const SERVER_ERROR = 500;
+
+module.exports = {
+  NOT_FOUND, BAD_REQUEST, UNAUTORIZED, SERVER_ERROR, CREATED,
+};

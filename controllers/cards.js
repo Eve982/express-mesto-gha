@@ -1,43 +1,37 @@
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { CAST_ERROR, NOT_FOUND, SERVER_ERROR } = require('../utils/utils');
+const NotFoundError = require('../errors/not_found_error');
+const BadRequestError = require('../errors/bad_request_error');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cardsData) => res.send(cardsData))
-    .catch((err) => {
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.', err });
-    });
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((cardsData) => res.send({ cardsData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при создании карточки.', err });
-      }
-      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
+        next(new NotFoundError(`Переданы некорректные данные при создании карточки. ${err}`));
+      } next(err);
     });
 };
 
-module.exports.deleteCard = (req, res) => {
-  const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
-    .orFail()
+module.exports.deleteCard = function(req, res, next) {
+  return Card.isCardOwner(req.params.cardId, req.user._id)
+    .then((cardId) => Card.findByIdAndRemove(cardId).orFail())
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные при удалении карточки.' });
-      } if (err.name === 'DocumentNotFoundError') {
-        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
-      }
-      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        next(new NotFoundError(`Переданы некорректные данные при удалении карточки. ${err}`));
+      } next(err);
     });
 };
 
-module.exports.setCardLike = (req, res) => {
+module.exports.setCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -47,15 +41,14 @@ module.exports.setCardLike = (req, res) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        next(new BadRequestError('Переданы некорректные данные для постановки лайка.'));
       } if (err.name === 'DocumentNotFoundError') {
-        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
-      }
-      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
+        next(new NotFoundError('Карточки с таким ID не существует.'));
+      } next(err);
     });
 };
 
-module.exports.deleteCardLike = (req, res) => {
+module.exports.deleteCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -65,10 +58,9 @@ module.exports.deleteCardLike = (req, res) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        return res.status(CAST_ERROR).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+        next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
       } if (err.name === 'DocumentNotFoundError') {
-        return res.status(NOT_FOUND).send({ message: 'Карточки с таким ID не существует.' });
-      }
-      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка.' });
+        next(new NotFoundError('Карточки с таким ID не существует.'));
+      } next(err);
     });
 };
