@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -34,8 +33,9 @@ app.use((err, req, res, next) => {
   next();
 });
 
-process.on('uncaughtException', (err, origin) => {
-  console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана. Обратите внимание!`);
-});
+// process.on('uncaughtException', (err, origin) => {
+//   console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана.
+// Обратите внимание!`);
+// });
 
 app.listen(PORT);

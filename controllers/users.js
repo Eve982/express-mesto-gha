@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
 const NotFoundError = require('../errors/not_found_error');
 const EmailExistError = require('../errors/email_exist_error');
 const BadRequestError = require('../errors/bad_request_error');
-const { NOT_FOUND, CREATED } = require('../utils/constants');
+const { NOT_FOUND, CREATED, JWT_SECRET } = require('../utils/constants');
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
@@ -80,7 +78,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
       res.cookie(

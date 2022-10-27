@@ -20,8 +20,8 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCard = function(req, res, next) {
-  return Card.isCardOwner(req.params.cardId, req.user._id)
+module.exports.deleteCard = (req, res, next) => {
+  Card.isCardOwner(req.params.cardId, req.user._id)
     .then((cardId) => Card.findByIdAndRemove(cardId).orFail())
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
