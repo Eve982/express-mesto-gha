@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 
 const process = require('process');
 
@@ -11,6 +12,7 @@ const { login, createUser } = require('./controllers/users');
 
 const app = express();
 app.use(cookieParser());
+app.use(errors());
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
@@ -33,9 +35,9 @@ app.use((err, req, res, next) => {
   next();
 });
 
-// process.on('uncaughtException', (err, origin) => {
-//   console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана.
-// Обратите внимание!`);
-// });
+process.on('uncaughtException', (err, origin) => {
+  console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана.
+Обратите внимание!`);
+});
 
 app.listen(PORT);
