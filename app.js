@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const process = require('process');
 
@@ -20,7 +20,12 @@ mongoose.connect(MONGO_URL, {
 app.use(express.json());
 
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
@@ -30,6 +35,7 @@ app.use('*', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
+  console.log(err);
   const { statusCode = SERVER_ERROR, message } = err;
   res.status(statusCode).send({ message: statusCode === SERVER_ERROR ? 'На сервере произошла ошибка.' : message });
   next();
