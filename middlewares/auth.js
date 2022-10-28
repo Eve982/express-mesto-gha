@@ -11,8 +11,9 @@ module.exports = (req, res, next) => {
   const jwtToken = () => {
     if (req.cookies.jwt) {
       return req.cookies.jwt;
-    }
-    return req.headers.authorization.replace('Bearer ', '');
+    } if (req.headers.authorization) {
+      return req.headers.authorization.replace('Bearer ', '')
+    } return handleAuthError(res);
   };
 
   // const jwtToken = req.cookies.jwt;

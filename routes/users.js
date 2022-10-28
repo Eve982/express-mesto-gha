@@ -23,9 +23,6 @@ router.get('/:userId', celebrate({
 }), auth, getUserById);
 
 router.get('/me', celebrate({
-  params: object.keys({
-    userId: string.required().id().alphanum().length(24),
-  }),
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
