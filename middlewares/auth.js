@@ -12,16 +12,9 @@ module.exports = (req, res, next) => {
     if (req.cookies.jwt) {
       return req.cookies.jwt;
     } if (req.headers.authorization) {
-      return req.headers.authorization.replace('Bearer ', '')
+      return req.headers.authorization.replace('Bearer ', '');
     } return handleAuthError(res);
   };
-
-  // const jwtToken = req.cookies.jwt;
-  // const { authorization } = req.headers.authorization;
-
-  if (!jwtToken()) {
-    return handleAuthError(res);
-  }
   let payload;
   try {
     payload = jwt.verify(jwtToken(), JWT_SECRET);

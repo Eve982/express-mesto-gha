@@ -4,7 +4,7 @@ const auth = require('../middlewares/auth');
 
 const { object, string } = Joi.types();
 const {
-  getAllUsers, getUserById, updateUser, updateAvatar,
+  getAllUsers, getUserById, updateUser, updateAvatar, getMyPage,
 } = require('../controllers/users');
 
 router.get('/', celebrate({
@@ -25,8 +25,9 @@ router.get('/:userId', celebrate({
 router.get('/me', celebrate({
   headers: object.keys({
     Autorization: string.token(),
+    cookie: string.token(),
   }).unknown(true),
-}), auth, getUserById);
+}), auth, getMyPage);
 
 router.patch('/me', celebrate({
   body: object.keys({
@@ -35,6 +36,7 @@ router.patch('/me', celebrate({
   }),
   headers: object.keys({
     Autorization: string.token(),
+    cookie: string.token(),
   }).unknown(true),
 }), auth, updateUser);
 

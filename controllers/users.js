@@ -89,3 +89,23 @@ module.exports.login = (req, res, next) => {
     })
     .catch(next);
 };
+
+module.exports.getMyPage = (req, res, next) => {
+  // const jwtToken = () => {
+  //   if (req.cookies.jwt) {
+  //     return req.cookies.jwt;
+  //   } if (req.headers.authorization) {
+  //     return req.headers.authorization.replace('Bearer ', '');
+  //   } return handleAuthError(res);
+  // };
+  User.findById(req.headers.authorization || req.cookies.jwt || req.headers.authorization.replace('Bearer ', ''))
+    .orFail()
+    .then((userData) => res.send(userData))
+    .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
+      } if (err.name === 'DocumentNotFoundError') {
+        next(new NotFoundError('Пользователя с таким ID не существует.'));
+      } next(err);
+    });
+};

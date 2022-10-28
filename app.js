@@ -10,7 +10,6 @@ const process = require('process');
 const { SERVER_ERROR } = require('./utils/constants');
 const NotFoundError = require('./errors/not_found_error');
 const { login, createUser } = require('./controllers/users');
-// const BadRequestError = require('./errors/bad_request_error');
 
 const app = express();
 app.use(cookieParser());
@@ -45,14 +44,13 @@ app.use('*', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   const { statusCode = SERVER_ERROR, message } = err;
   res.status(statusCode).send({ message: statusCode === SERVER_ERROR ? 'На сервере произошла ошибка.' : message });
   next();
 });
 
 process.on('uncaughtException', (err, origin) => {
-  console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана.
+  console.err(`${origin} ${err.name} c текстом ${err.message} не была обработана.
 Обратите внимание!`);
 });
 
