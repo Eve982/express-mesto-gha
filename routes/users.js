@@ -13,15 +13,6 @@ router.get('/', celebrate({
   }).unknown(true),
 }), auth, getAllUsers);
 
-router.get('/:userId', celebrate({
-  params: object.keys({
-    userId: string.required().id().alphanum().length(24),
-  }),
-  headers: object.keys({
-    Autorization: string.token(),
-  }).unknown(true),
-}), auth, getUserById);
-
 router.get('/me', celebrate({
   headers: object.keys({
     Autorization: string.token(),
@@ -46,5 +37,14 @@ router.patch('/me/avatar', celebrate({
     Autorization: string.token(),
   }).unknown(true),
 }), auth, updateAvatar);
+
+router.get('/:userId', celebrate({
+  params: object.keys({
+    userId: string.required().id().alphanum().length(24),
+  }),
+  headers: object.keys({
+    Autorization: string.token(),
+  }).unknown(true),
+}), auth, getUserById);
 
 module.exports = router;
