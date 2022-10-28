@@ -15,7 +15,7 @@ router.get('/', celebrate({
 
 router.get('/:userId', celebrate({
   params: object.keys({
-    userId: string.required().id().length(24),
+    userId: string.required().id().alphanum().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
@@ -24,7 +24,7 @@ router.get('/:userId', celebrate({
 
 router.get('/me', celebrate({
   params: object.keys({
-    userId: string.required().id().length(24),
+    userId: string.required().id().alphanum().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
@@ -34,7 +34,7 @@ router.get('/me', celebrate({
 router.patch('/me', celebrate({
   body: object.keys({
     name: string.required().min(2).max(30),
-    about: string.required().min(2),
+    about: string.required().min(2).max(30),
   }),
   headers: object.keys({
     Autorization: string.token(),

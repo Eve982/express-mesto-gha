@@ -21,7 +21,7 @@ router.post('/', celebrate({
 
 router.delete('/:cardId', celebrate({
   params: object.keys({
-    cardId: string.required().id(),
+    cardId: string.required().id().alphanum().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
@@ -30,7 +30,7 @@ router.delete('/:cardId', celebrate({
 
 router.put('/:cardId/likes', celebrate({
   params: object.keys({
-    cardId: string.required().id(),
+    cardId: string.required().id().alphanum().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
@@ -39,7 +39,7 @@ router.put('/:cardId/likes', celebrate({
 
 router.delete('/:cardId/likes', celebrate({
   params: object.keys({
-    cardId: string.required().id(),
+    cardId: string.required().id().alphanum().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),

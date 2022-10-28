@@ -5,7 +5,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not_found_error');
 const EmailExistError = require('../errors/email_exist_error');
 const BadRequestError = require('../errors/bad_request_error');
-const { NOT_FOUND, CREATED, JWT_SECRET } = require('../utils/constants');
+const { CREATED, JWT_SECRET } = require('../utils/constants');
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
@@ -40,7 +40,7 @@ module.exports.getUserById = (req, res, next) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
-      } if (err.code === NOT_FOUND) {
+      } if (err.name === 'DocumentNotFoundError') {
         next(new NotFoundError('Пользователя с таким ID не существует.'));
       } next(err);
     });
