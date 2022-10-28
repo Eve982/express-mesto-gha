@@ -8,14 +8,22 @@ const handleAuthError = (res) => {
 };
 
 module.exports = (req, res, next) => {
-  const jwtToken = req.cookies.jwt;
-  console.log(jwtToken);
-  if (!jwtToken) {
+  const jwtToken = () => {
+    if (req.cookies.jwt) {
+      return req.cookies.jwt;
+    }
+    return req.headers.authorization.replace('Bearer ', '');
+  };
+
+  // const jwtToken = req.cookies.jwt;
+  // const { authorization } = req.headers.authorization;
+
+  if (!jwtToken()) {
     return handleAuthError(res);
   }
   let payload;
   try {
-    payload = jwt.verify(jwtToken, JWT_SECRET);
+    payload = jwt.verify(jwtToken(), JWT_SECRET);
   } catch (err) {
     return handleAuthError(res);
   }
