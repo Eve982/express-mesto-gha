@@ -9,6 +9,7 @@ const auth = require('./middlewares/auth');
 const { SERVER_ERROR } = require('./utils/constants');
 const NotFoundError = require('./errors/not_found_error');
 const { login, createUser } = require('./controllers/users');
+const BadRequestError = require('./errors/bad_request_error');
 
 const app = express();
 app.use(cookieParser());
@@ -28,7 +29,7 @@ app.post('/signup', celebrate({
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use(errors(new NotFoundError('Переданы некорректные данные при создании пользователя.')));
+app.use(errors(new BadRequestError('Переданы некорректные данные при создании пользователя.')));
 app.use('*', (req, res) => {
   const err = new NotFoundError(`Запрашиваемый ресурс ${req.baseUrl} не найден.`);
   res.status(err.statusCode).send({ message: err.message });
