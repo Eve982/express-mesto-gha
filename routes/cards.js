@@ -7,7 +7,7 @@ const {
   getCards, createCard, deleteCard, setCardLike, deleteCardLike,
 } = require('../controllers/cards');
 
-router.get('/', getCards);
+router.get('/', auth, getCards);
 
 router.post('/', celebrate({
   body: object.keys({

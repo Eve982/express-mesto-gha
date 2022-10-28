@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const auth = require('../middlewares/auth');
 
 const { object, string } = Joi.types();
 const {
@@ -10,7 +11,7 @@ router.get('/', celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), getAllUsers);
+}), auth, getAllUsers);
 
 router.get('/:userId', celebrate({
   params: object.keys({
@@ -19,7 +20,7 @@ router.get('/:userId', celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), getUserById);
+}), auth, getUserById);
 
 router.get('/me', celebrate({
   params: object.keys({
@@ -28,7 +29,7 @@ router.get('/me', celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), getUserById);
+}), auth, getUserById);
 
 router.patch('/me', celebrate({
   body: object.keys({
@@ -38,7 +39,7 @@ router.patch('/me', celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), updateUser);
+}), auth, updateUser);
 
 router.patch('/me/avatar', celebrate({
   body: object.keys({
@@ -47,6 +48,6 @@ router.patch('/me/avatar', celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), updateAvatar);
+}), auth, updateAvatar);
 
 module.exports = router;
