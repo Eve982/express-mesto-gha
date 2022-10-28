@@ -89,12 +89,3 @@ module.exports.login = (req, res, next) => {
     })
     .catch(next);
 };
-
-// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-// eyJfaWQiOiI2MzU5NTg1ODE2OGQzNzdiMGExZTU2OGUiLCJpYXQiOjE2NjY4OTM1OTYsImV
-// 4cCI6MTY2NzQ5ODM5Nn0.hEszevU-UkqS2rJAB27QgJ0dDvGp1mFZFR2CDgmSpPg';
-
-// function parseJwt(df) {
-//   return JSON.parse(Buffer.from(df.split('.')[1], 'base64').toString());
-// }
-// console.log(parseJwt(token));
