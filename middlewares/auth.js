@@ -8,14 +8,14 @@ const handleAuthError = (res) => {
     .send({ message: 'Необходима авторизация' });
 };
 
-const extractBearerToken = (header) => header.replace('Bearer ', '');
+const extractBearerToken = (header) => header.replace('jwt=', '');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  const { cookie } = req.headers;
+  if (!cookie || !cookie.startsWith('jwt=')) {
     return handleAuthError(res);
   }
-  const token = extractBearerToken(authorization);
+  const token = extractBearerToken(cookie);
   let payload;
   try {
     payload = jwt.verify(token, JWT_SECRET);

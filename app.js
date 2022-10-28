@@ -9,7 +9,7 @@ const auth = require('./middlewares/auth');
 const { SERVER_ERROR } = require('./utils/constants');
 const NotFoundError = require('./errors/not_found_error');
 const { login, createUser } = require('./controllers/users');
-const BadRequestError = require('./errors/bad_request_error');
+// const BadRequestError = require('./errors/bad_request_error');
 
 const app = express();
 app.use(cookieParser());
