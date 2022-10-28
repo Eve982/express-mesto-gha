@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const { object, string } = Joi.types();
 
 const process = require('process');
 
@@ -18,11 +19,19 @@ mongoose.connect(MONGO_URL, {
 });
 app.use(express.json());
 
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: object.keys({
+    email: string.required().email(),
+    password: string.required(),
+  }),
+}), login);
 app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
+  body: object.keys({
+    name: string.min(2).max(30),
+    about: string.min(2).max(30),
+    avatar: string.min(2).regex(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/),
+    email: string.required().email(),
+    password: string.required(),
   }),
 }), createUser);
 app.use('/users', require('./routes/users'));
