@@ -85,7 +85,7 @@ module.exports.login = (req, res, next) => {
         'jwt',
         token,
         { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true },
-      ).status(CREATED).send({ message: 'Вход выполнен успешно!' });
+      ).send({ message: 'Вход выполнен успешно!' });
     })
     .catch(next);
 };

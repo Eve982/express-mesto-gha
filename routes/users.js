@@ -15,7 +15,7 @@ router.get('/', celebrate({
 
 router.get('/:userId', celebrate({
   params: object.keys({
-    userId: string.required().id(),
+    userId: string.required().id().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
@@ -24,7 +24,7 @@ router.get('/:userId', celebrate({
 
 router.get('/me', celebrate({
   params: object.keys({
-    userId: string.required().id(),
+    userId: string.required().id().length(24),
   }),
   headers: object.keys({
     Autorization: string.token(),
