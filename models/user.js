@@ -54,4 +54,15 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
+// cardSchema.statics.isProfileOwner = function (cardId, userId) {
+//   return this.findById(cardId).orFail(new NotFoundError('Такая карточка не существует.'))
+//     .then((card) => {
+//       const cardOwnerId = JSON.parse(JSON.stringify(card.owner._id));
+//       const userID = JSON.parse(JSON.stringify(userId));
+//       if (cardOwnerId !== userID) {
+//         return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки.'));
+//       } return cardId;
+//     });
+// };
+
 module.exports = mongoose.model('user', userSchema);

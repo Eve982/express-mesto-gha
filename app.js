@@ -12,7 +12,6 @@ const { login, createUser } = require('./controllers/users');
 
 const app = express();
 app.use(cookieParser());
-app.use(errors());
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
@@ -29,6 +28,7 @@ app.post('/signup', celebrate({
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
+app.use(errors(new NotFoundError('Переданы некорректные данные при создании пользователя.')));
 app.use('*', (req, res) => {
   const err = new NotFoundError(`Запрашиваемый ресурс ${req.baseUrl} не найден.`);
   res.status(err.statusCode).send({ message: err.message });
