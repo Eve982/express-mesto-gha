@@ -2,11 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const isURL = require('validator/lib/isEmail');
 
 const { object, string } = Joi.types();
-
 const process = require('process');
-
 const { SERVER_ERROR } = require('./utils/constants');
 const NotFoundError = require('./errors/not_found_error');
 const { login, createUser } = require('./controllers/users');
@@ -29,7 +28,9 @@ app.post('/signup', celebrate({
   body: object.keys({
     name: string.min(2).max(30),
     about: string.min(2).max(30),
-    avatar: string.min(2).regex(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/),
+    avatar: string.min(2).pattern({
+      validator: (v) => isURL(v), message: 'Некорректный URL-адрес.',
+    }),
     email: string.required().email(),
     password: string.required(),
   }),
