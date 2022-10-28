@@ -25,7 +25,6 @@ router.get('/:userId', celebrate({
 router.get('/me', celebrate({
   headers: object.keys({
     Autorization: string.token(),
-    cookie: string.token(),
   }).unknown(true),
 }), auth, getMyPage);
 
@@ -36,7 +35,6 @@ router.patch('/me', celebrate({
   }),
   headers: object.keys({
     Autorization: string.token(),
-    cookie: string.token(),
   }).unknown(true),
 }), auth, updateUser);
 
