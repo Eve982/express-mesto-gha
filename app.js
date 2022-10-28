@@ -29,7 +29,7 @@ app.post('/signup', celebrate({
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use(errors(new BadRequestError('Переданы некорректные данные при создании пользователя.')));
+app.use(errors());
 app.use('*', (req, res) => {
   const err = new NotFoundError(`Запрашиваемый ресурс ${req.baseUrl} не найден.`);
   res.status(err.statusCode).send({ message: err.message });
