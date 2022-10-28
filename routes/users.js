@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const isURL = require('validator/lib/isURL');
 const auth = require('../middlewares/auth');
 
 const { object, string } = Joi.types();
@@ -41,9 +40,7 @@ router.patch('/me', celebrate({
 
 router.patch('/me/avatar', celebrate({
   body: object.keys({
-    avatar: string.required().pattern({
-      validator: (v) => isURL(v), message: 'Некорректный URL-адрес.',
-    }),
+    avatar: string.required().regex(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/),
   }),
   headers: object.keys({
     Autorization: string.token(),
