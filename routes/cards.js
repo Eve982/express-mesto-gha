@@ -9,7 +9,7 @@ const {
 
 router.get('/', getCards);
 
-router.post('/', auth, celebrate({
+router.post('/', celebrate({
   body: object.keys({
     name: string.required().min(2).max(30),
     link: string.required().min(2).regex(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/),
@@ -17,33 +17,33 @@ router.post('/', auth, celebrate({
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), createCard);
+}), auth, createCard);
 
-router.delete('/:cardId', auth, celebrate({
+router.delete('/:cardId', celebrate({
   params: object.keys({
     cardId: string.required().id(),
   }),
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), deleteCard);
+}), auth, deleteCard);
 
-router.put('/:cardId/likes', auth, celebrate({
+router.put('/:cardId/likes', celebrate({
   params: object.keys({
     cardId: string.required().id(),
   }),
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), setCardLike);
+}), auth, setCardLike);
 
-router.delete('/:cardId/likes', auth, celebrate({
+router.delete('/:cardId/likes', celebrate({
   params: object.keys({
     cardId: string.required().id(),
   }),
   headers: object.keys({
     Autorization: string.token(),
   }).unknown(true),
-}), deleteCardLike);
+}), auth, deleteCardLike);
 
 module.exports = router;
