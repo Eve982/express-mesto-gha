@@ -40,8 +40,14 @@ module.exports.valdateURL = celebrate({
   }),
 });
 
-module.exports.validateID = celebrate({
+module.exports.validateUserId = celebrate({
   params: object.keys({
     userId: string.required().id().alphanum().length(24),
+  }),
+});
+
+module.exports.validateCardId = celebrate({
+  params: object.keys({
+    cardId: string.required().id().alphanum().length(24),
   }),
 });

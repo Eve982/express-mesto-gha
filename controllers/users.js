@@ -26,10 +26,10 @@ module.exports.createUser = (req, res, next) => {
       }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+        return next(new NotFoundError('Переданы некорректные данные при создании пользователя.'));
       } if (err.code === 11000) {
-        next(new EmailExistError(`Пользователь с email ${email} уже зарегистрирован.`));
-      } next(err);
+        return next(new EmailExistError(`Пользователь с email ${email} уже зарегистрирован.`));
+      } return next(err);
     });
 };
 
@@ -39,10 +39,10 @@ module.exports.getUserById = (req, res, next) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
+        return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователя с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Пользователя с таким ID не существует.'));
+      } return next(err);
     });
 };
 
@@ -52,10 +52,10 @@ module.exports.updateUser = (req, res, next) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+        return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователя с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Пользователя с таким ID не существует.'));
+      } return next(err);
     });
 };
 
@@ -65,10 +65,10 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((avatarData) => res.send(avatarData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new BadRequestError('Переданы некорректные данные при обновлении аватара.'));
+        return next(new BadRequestError('Переданы некорректные данные при обновлении аватара.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователя с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Пользователя с таким ID не существует.'));
+      } return next(err);
     });
 };
 
@@ -96,10 +96,10 @@ module.exports.getMyPage = (req, res, next) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
+        return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователя с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Пользователя с таким ID не существует.'));
+      } return next(err);
     });
 };
 
@@ -109,9 +109,9 @@ module.exports.logout = (req, res, next) => {
     .then(() => res.clearCookie('jwt').send({ message: 'Вы вышли из аккаунта.' }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
+        return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователя с таким ID не существует.'));
+        return next(new NotFoundError('Пользователя с таким ID не существует.'));
       } return next(err);
     });
 };

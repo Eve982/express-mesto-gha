@@ -15,8 +15,8 @@ module.exports.createCard = (req, res, next) => {
     .then((cardsData) => res.send({ cardsData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new NotFoundError('Переданы некорректные данные при создании карточки.'));
-      } next(err);
+        return next(new NotFoundError('Переданы некорректные данные при создании карточки.'));
+      } return next(err);
     });
 };
 
@@ -26,8 +26,8 @@ module.exports.deleteCard = (req, res, next) => {
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        next(new NotFoundError('Переданы некорректные данные при удалении карточки.'));
-      } next(err);
+        return next(new NotFoundError('Переданы некорректные данные при удалении карточки.'));
+      } return next(err);
     });
 };
 
@@ -41,10 +41,10 @@ module.exports.setCardLike = (req, res, next) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные для постановки лайка.'));
+        return next(new BadRequestError('Переданы некорректные данные для постановки лайка.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Карточки с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Карточки с таким ID не существует.'));
+      } return next(err);
     });
 };
 
@@ -58,9 +58,9 @@ module.exports.deleteCardLike = (req, res, next) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
-        next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
+        return next(new BadRequestError('Переданы некорректные данные для снятия лайка.'));
       } if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Карточки с таким ID не существует.'));
-      } next(err);
+        return next(new NotFoundError('Карточки с таким ID не существует.'));
+      } return next(err);
     });
 };
