@@ -3,7 +3,7 @@ const { Joi, celebrate } = require('celebrate');
 const { object, string } = Joi.types();
 const { REGEX_LINK } = require('../utils/constants');
 
-module.exports.validateCreateCard = celebrate({
+module.exports.validateCreateUser = celebrate({
   body: object.keys({
     name: string.min(2).max(30),
     about: string.min(2).max(30),
