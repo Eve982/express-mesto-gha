@@ -15,7 +15,7 @@ module.exports.createCard = (req, res, next) => {
     .then((cardsData) => res.send({ cardsData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new NotFoundError(`Переданы некорректные данные при создании карточки. ${err}`));
+        next(new NotFoundError('Переданы некорректные данные при создании карточки.'));
       } next(err);
     });
 };
@@ -26,7 +26,7 @@ module.exports.deleteCard = (req, res, next) => {
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        next(new NotFoundError(`Переданы некорректные данные при удалении карточки. ${err}`));
+        next(new NotFoundError('Переданы некорректные данные при удалении карточки.'));
       } next(err);
     });
 };
