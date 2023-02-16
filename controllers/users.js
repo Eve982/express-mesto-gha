@@ -103,15 +103,6 @@ module.exports.getMyPage = (req, res, next) => {
     });
 };
 
-module.exports.logout = (req, res, next) => {
-  User.findById(req.user)
-    .orFail()
-    .then(() => res.clearCookie('jwt').send({ message: 'Вы вышли из аккаунта.' }))
-    .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
-      } if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователя с таким ID не существует.'));
-      } return next(err);
-    });
+module.exports.logout = (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Вы вышли из аккаунта.' });
 };
