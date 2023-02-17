@@ -1,4 +1,4 @@
-const { allowedCors } = require('../utils/constants');
+const { ALLOWED_CORS } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
   const { method } = req;
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   res.header('Access-Control-Allow-Credentials', true);
-  if (allowedCors.includes(origin)) {
+  if (ALLOWED_CORS.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
   if (method === 'OPTIONS') {

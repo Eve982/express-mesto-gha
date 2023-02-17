@@ -8,7 +8,6 @@ const { validateLogin, validateCreateUser } = require('../middlewares/validatior
 
 router.post('/signin', validateLogin, login);
 router.post('/signup', validateCreateUser, createUser);
-router.post('/signin', login);
 router.use(auth);
 router.use('/users', usersRoutes);
 router.use('/cards', cardsRoutes);
