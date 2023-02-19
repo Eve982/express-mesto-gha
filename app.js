@@ -1,6 +1,7 @@
 const express = require('express');
 const process = require('process');
 require('dotenv').config();
+
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');

@@ -42,12 +42,12 @@ module.exports.valdateURL = celebrate({
 
 module.exports.validateUserId = celebrate({
   params: object.keys({
-    userId: string.required().id().alphanum().length(24),
+    userId: Joi.string().required().length(24).hex(),
   }),
 });
 
 module.exports.validateCardId = celebrate({
   params: object.keys({
-    cardId: string.required().id().alphanum().length(24),
+    cardId: Joi.string().required().length(24).hex(),
   }),
 });
