@@ -5,30 +5,34 @@ const BadRequestError = require('../errors/bad_request_error');
 const { CREATED } = require('../utils/constants');
 
 module.exports.getCards = (req, res, next) => {
-  Card.find({})
-    .then((cardsData) => res.send(cardsData))
+  Card.find({}).select({}).populate('owner').sort({ _id: -1 })
+    .then((cardsData) => {
+      res.send(cardsData);
+    })
     .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((cardsData) => res.status(CREATED).send({ cardsData }))
+    .then((card) => res.status(CREATED).send(card))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new NotFoundError('Переданы некорректные данные при создании карточки.'));
-      } return next(err);
+      }
+      return next(err);
     });
 };
 
 module.exports.deleteCard = (req, res, next) => {
   Card.isCardOwner(req.params.cardId, req.user._id)
-    .then((cardId) => Card.remove(cardId).orFail())
+    .then((card) => card.remove())
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new NotFoundError('Переданы некорректные данные при удалении карточки.'));
-      } return next(err);
+      }
+      return next(err);
     });
 };
 

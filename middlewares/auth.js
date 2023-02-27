@@ -9,7 +9,8 @@ module.exports = (req, res, next) => {
   const jwtToken = () => {
     if (req.cookies.jwt) {
       return req.cookies.jwt;
-    } return next(new UnauthorizedError(UnauthorizedMessage));
+    }
+    return next(new UnauthorizedError(UnauthorizedMessage));
   };
   let payload;
   try {

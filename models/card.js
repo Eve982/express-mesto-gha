@@ -43,7 +43,8 @@ cardSchema.statics.isCardOwner = function (cardId, userId) {
       const userID = JSON.stringify(userId);
       if (cardOwnerId !== userID) {
         return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки.'));
-      } return cardId;
+      }
+      return card;
     });
 };
 

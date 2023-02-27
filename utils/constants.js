@@ -6,7 +6,7 @@ const REGEX_LINK = /^https?:\/\/(www.)?\S+\.\S+#?/i;
 const ALLOWED_CORS = [
   'https://eve982.pet-project.nomoredomains.work',
   'http://eve982.pet-project.nomoredomains.work',
-  'http://localhost:3000',
+  'http://localhost:3001',
 ];
 
 module.exports = {
