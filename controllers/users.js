@@ -37,39 +37,33 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail()
+    .orFail(new NotFoundError('Пользователя с таким ID не существует.'))
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
-      } if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователя с таким ID не существует.'));
       } return next(err);
     });
 };
 
 module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
-    .orFail()
+    .orFail(new NotFoundError('Пользователя с таким ID не существует.'))
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
-      } if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователя с таким ID не существует.'));
       } return next(err);
     });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
-    .orFail()
+    .orFail(new NotFoundError('Пользователя с таким ID не существует.'))
     .then((avatarData) => res.send(avatarData))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Переданы некорректные данные при обновлении аватара.'));
-      } if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователя с таким ID не существует.'));
       } return next(err);
     });
 };
@@ -93,14 +87,12 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getMyPage = (req, res, next) => {
-  User.findById(req.user)
-    .orFail()
+  User.findById(req.user._id)
+    .orFail(new NotFoundError('Пользователя с таким ID не существует.'))
     .then((userData) => res.send(userData))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
-      } if (err.name === 'DocumentNotFoundError') {
-        return next(new NotFoundError('Пользователя с таким ID не существует.'));
       } return next(err);
     });
 };

@@ -5,7 +5,7 @@ const BadRequestError = require('../errors/bad_request_error');
 const { CREATED } = require('../utils/constants');
 
 module.exports.getCards = (req, res, next) => {
-  Card.find({}).select({}).populate('owner').sort({ _id: -1 })
+  Card.find({}).select({}).sort({ _id: -1 })
     .then((cardsData) => {
       res.send(cardsData);
     })
@@ -29,8 +29,8 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => card.remove())
     .then((cardsData) => res.send(cardsData))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        return next(new NotFoundError('Переданы некорректные данные при удалении карточки.'));
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new BadRequestError('Переданы некорректные данные при удалении карточки.'));
       }
       return next(err);
     });
