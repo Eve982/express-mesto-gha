@@ -90,11 +90,7 @@ module.exports.getMyPage = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new NotFoundError('Пользователя с таким ID не существует.'))
     .then((userData) => res.send(userData))
-    .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
-        return next(new BadRequestError('Переданы некорректные данные при поиске пользователя.'));
-      } return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.logout = (req, res) => {
